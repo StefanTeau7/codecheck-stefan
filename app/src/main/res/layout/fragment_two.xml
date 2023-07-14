@@ -43,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
+        android:paddingStart="16dp"
         android:text="Written in Kotlin"
         android:textColor="@color/black"
         android:textSize="14sp"

@@ -14,6 +14,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
 import net.sevendays.android.code_check.R
 import net.sevendays.android.code_check.databinding.FragmentOneBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class OneFragment: Fragment(R.layout.fragment_one){
 
@@ -23,29 +26,29 @@ class OneFragment: Fragment(R.layout.fragment_one){
 
         val _binding= FragmentOneBinding.bind(view)
 
-        val _viewModel= OneViewModel(context!!)
+        val _viewModel= OneViewModel(requireContext())
 
-        val _layoutManager= LinearLayoutManager(context!!)
+        val _layoutManager= LinearLayoutManager(requireContext())
         val _dividerItemDecoration=
-            DividerItemDecoration(context!!, _layoutManager.orientation)
+            DividerItemDecoration(requireContext(), _layoutManager.orientation)
         val _adapter= CustomAdapter(object : CustomAdapter.OnItemClickListener {
             override fun itemClick(item: item){
                 gotoRepositoryFragment(item)
             }
         })
 
-        _binding.searchInputText
-            .setOnEditorActionListener{ editText, action, _ ->
-                if (action== EditorInfo.IME_ACTION_SEARCH){
-                    editText.text.toString().let {
-                        _viewModel.searchResults(it).apply{
-                            _adapter.submitList(this)
-                        }
-                    }
-                    return@setOnEditorActionListener true
+        _binding.searchInputText.setOnEditorActionListener { editText, action, _ ->
+            if (action == EditorInfo.IME_ACTION_SEARCH) {
+                val inputText = editText.text.toString()
+                CoroutineScope(Dispatchers.Main).launch {
+                    val results = _viewModel.searchResults(inputText)
+                    _adapter.submitList(results)
                 }
-                return@setOnEditorActionListener false
+                return@setOnEditorActionListener true
             }
+            return@setOnEditorActionListener false
+        }
+        
 
         _binding.recyclerView.also{
             it.layoutManager= _layoutManager

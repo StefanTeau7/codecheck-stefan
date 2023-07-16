@@ -2,4 +2,5 @@
     <string name="app_name">Android Engineer CodeCheck</string>
     <string name="searchInputText_hint">Search GitHub repositories</string>
     <string name="written_language">Written in %s</string>
+    <string name="jetbrains_kotlin">JetBrains/kotlin</string>
 </resources>
